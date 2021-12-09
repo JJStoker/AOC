@@ -21,5 +21,18 @@ def part_01():
         elif command == 'down':
             y += units
     print(f'Part 1: {x * y}')
+    
+def part_02():
+    y, x, aim = 0, 0, 0
+    for (command, units) in instructions:
+        if command == 'forward':
+            x += units
+            y += (aim * units)
+        elif command == 'up':
+            aim -= units
+        elif command == 'down':
+            aim += units
+    print(f'Part 2: {x * y}')
 
 part_01()
+part_02()
