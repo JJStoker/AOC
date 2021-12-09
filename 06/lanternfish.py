@@ -8,7 +8,7 @@ fish: List[int] = []
 with open(INPUT_FILE, 'r') as input_file:
     fish = [int(x) for x in input_file.read().split(',')]
 
-def part_1(days: int):
+def part_1(day: str, days: int):
     fish_state = defaultdict(int)
     for f in fish:
         fish_state[f] += 1    
@@ -21,6 +21,7 @@ def part_1(days: int):
             else:
                 day_state[cycle - 1] += count
         fish_state = day_state
-    print(f'Part 1: {sum(fish_state.values())}')
+    print(f'Part {day}: {sum(fish_state.values())}')
 
-part_1(80)
+part_1('1', 80)
+part_1('2', 256)
