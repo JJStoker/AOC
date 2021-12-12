@@ -10,21 +10,26 @@ with open(INPUT_FILE, "r") as input_file:
         caves[end].append(start)
 
 
-def part_1():
+def cave_explorer(backwards = False):
     paths = 0
-    traverse = []
-    traverse.append(('start', set(['start'])))
+    current, traversed, previous = ('start', set(['start']), None)
+    traverse = [(current, traversed, previous)]
+    # https://en.wikipedia.org/wiki/Depth-first_search
     while traverse:
-        (curr, seen) = traverse.pop(0)
-        if curr == 'end':
+        (current, traversed, previous) = traverse.pop(0)
+        if current == 'end':
             paths += 1
             continue
-        for next in caves[curr]:
-            if next not in seen:
-                candidates = set(seen)
+        for next in caves[current]:
+            if next == 'start': continue
+            if next not in traversed:
+                candidates = set(traversed)
                 if next.lower() == next:
                     candidates.add(next)
-                traverse.append((next, candidates))
-    print(f'Part 1: {paths}')
+                traverse.append((next, candidates, previous))
+            elif next in traversed and not previous and next != 'end' and backwards:
+                traverse.append((next, traversed, next))
+    return paths
 
-part_1()
+print(f'Part 1: {cave_explorer(backwards=False)}')
+print(f'Part 2: {cave_explorer(backwards=True)}')
