@@ -32,9 +32,20 @@ def get_sizes():
 def part_01():
     sizes = get_sizes()
     total = 0
-    for folder, size in sizes.items():
+    for size in sizes.values():
         if size <= 100000:
             total += size
     print(f"Part 1: {total}")
 
+def part_02():
+    sizes = get_sizes()
+    target = sizes["/root"] - 39999999
+    folders = []
+    for size in sizes.values():
+        if target <= size:
+            folders.append(size)
+    print(f"Part 2: {min(folders)}")
+
+
 part_01()
+part_02()
