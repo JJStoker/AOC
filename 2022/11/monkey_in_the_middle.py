@@ -1,26 +1,9 @@
-import re
-import operator
-from typing import List
-from collections import deque, defaultdict, OrderedDict
+import re, operator, math
+from functools import reduce
+from collections import defaultdict, OrderedDict
 
 with open("input.txt" if True else "sample.txt", "r") as i:
     inputs = list(map(lambda l: l.replace("\n", ""), i.readlines()))
-
-
-class Monkey:
-    items: List[int] = []
-    operation, test_conditio, outcome_true, outcome_false = None, None, None, None
-    def __init__(self, items: List[int], operation: str, test_condition, outcome_true, outcome_false) -> None:
-        self.items = items
-        self.operation = operation
-        self.test_condition = int(test_condition)
-        self.outcome_true = int(outcome_true)
-        self.outcome_false = int(outcome_false)
-
-    def test(self, div: str):
-        pass
-    
-    
 
 operators = {'+': operator.add, '-': operator.sub, '*': operator.mul}
 def get_monkeys():
@@ -44,7 +27,8 @@ def get_monkeys():
             operations[monkey] = [op, right]
         test = re.search(r'Test: divisible by (\d+)', l)
         if test:
-            testcase[monkey] = int(test.group(1))
+            case = int(test.group(1))
+            testcase[monkey] = int(case)
         
         target_01 = re.search(r'If true: throw to monkey (\d+)', l)
         if target_01:
@@ -55,10 +39,19 @@ def get_monkeys():
             target_false[monkey] = int(target_02.group(1))
     return [items, operations, testcase, target_true, target_false]
             
-def part_01():
+def simulate(rounds=20, reduce_func=None):
     inspections = defaultdict(int)
     monkey_items, operations, testcase, target_true, target_false = get_monkeys()
-    for _ in range(20):
+    
+    if not reduce_func:
+        # had to look this up
+        def lcm(arr):
+            l=reduce(lambda x,y:(x*y)//math.gcd(x,y),arr)
+            return l
+        print(f'LCM: {lcm(testcase.values())}')
+        reduce_func = lambda x: x % lcm(testcase.values())
+    
+    for _ in range(rounds):
         for monkey in range(len(monkey_items.keys())):
             items = monkey_items[monkey]
             for item in items:
@@ -66,13 +59,20 @@ def part_01():
                 right = operations[monkey][1]
                 if right == "old":
                     right = item
-                new_value = operators[operations[monkey][0]](item, int(right)) // 3
+                new_value = reduce_func(operators[operations[monkey][0]](item, int(right)))
                 if new_value % testcase[monkey] == 0:
                     monkey_items[target_true[monkey]].append(new_value)
                 else:
                     monkey_items[target_false[monkey]].append(new_value)
             monkey_items[monkey] = []
-    print (inspections)
-    print(f"Part 1: {operator.mul(*sorted(inspections.values(), reverse=True)[:2])}")
+    return operator.mul(*sorted(inspections.values(), reverse=True)[:2])
+
+def part_01():
+    print(f'Part 1: {simulate(20, lambda x: x // 3)}')
+
+def part_02():
+    print(f'Part 2: {simulate(10000)}')
+
 
 part_01()
+part_02()
