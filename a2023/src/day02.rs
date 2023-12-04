@@ -2,9 +2,7 @@ use regex::Regex;
 use std::collections::HashMap;
 use std::fs;
 
-fn part_01(contents: String, example: bool) {
-    let limits = HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
-
+fn parse_games(contents: String) -> HashMap<String, HashMap<String, i32>> {
     let game_regex = Regex::new(r"Game (\d+): ((?:\d+ (?:red|blue|green)[,;]?\s?)+)").unwrap();
     let color_regex = Regex::new(r"(\d+) (red|blue|green)").unwrap();
     let mut games: HashMap<String, HashMap<String, i32>> = HashMap::new();
@@ -24,6 +22,12 @@ fn part_01(contents: String, example: bool) {
         }
         games.insert(game_number, color_counts);
     }
+    return games;
+}
+
+fn part_01(contents: String, example: bool) {
+    let limits = HashMap::from([("red", 12), ("green", 13), ("blue", 14)]);
+    let games = parse_games(contents);
     let sum: i32 = games
         .iter()
         .filter_map(|(game, colors)| {
@@ -42,11 +46,30 @@ fn part_01(contents: String, example: bool) {
     println!("Answer day 2 {}: part 1: {}", identifier, sum);
 }
 
+fn part_02(contents: String, example: bool) {
+    let games = parse_games(contents);
+    let sum: i32 = games
+        .iter()
+        .filter_map(|(_, colors)| {
+            let red_count = *colors.get("red").unwrap_or(&0);
+            let green_count = *colors.get("green").unwrap_or(&0);
+            let blue_count = *colors.get("blue").unwrap_or(&0);
+
+            Some(red_count * green_count * blue_count)
+        })
+        .sum();
+    let identifier = if example == true { "example" } else { "" };
+    println!("Answer day 2 {}: part 2: {}", identifier, sum);
+}
+
+
 pub fn solve() {
-    let contents = fs::read_to_string("./inputs/02_example.txt")
+    let sample_1 = fs::read_to_string("./inputs/02_example.txt")
         .expect("Should have been able to read the file");
-    part_01(contents, true);
-    let contents =
+    let input_1 =
         fs::read_to_string("./inputs/02.txt").expect("Should have been able to read the file");
-    part_01(contents, false);
+    part_01(sample_1.clone(), true);
+    part_01(input_1.clone(), false);
+    part_02(sample_1.clone(), true);
+    part_02(input_1.clone(), false);
 }
