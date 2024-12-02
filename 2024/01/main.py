@@ -22,14 +22,11 @@ def part_01():
 
 def part_02():
     a, b = list(zip(*get_input()))
-    similarity_score = []
     
     def similarity(n):
         return n * len([i for i in b if i == n])
     
-    for x in a:
-        similarity_score.append(similarity(x))
-    print (F'Day 01, part 2: {sum(similarity_score)}')
+    print (F'Day 01, part 2: {sum(map(similarity, a))}')
 
 part_01()
 part_02()
