@@ -27,7 +27,6 @@ fn part_01(contents: String, example: bool) {
             }
         }
     }
-
     let identifier = if example { "example" } else { "" };
     println!("Answer day 3 {}: part 1: {}", identifier, sum);
 }
