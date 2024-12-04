@@ -16,16 +16,16 @@ def get_input(sample_filename=None):
 def part_01():
     grid = get_input()
     directions = [
-        (0, -1), 
-        (1, -1), 
-        (1, 0),  
-        (1, 1),  
-        (0, 1),  
-        (-1, 1), 
-        (-1, 0), 
-        (-1, -1),
+        (0, -1),  # up
+        (1, -1),  # up-right
+        (1, 0),   # right
+        (1, 1),   # down-right
+        (0, 1),   # down
+        (-1, 1),  # down-left
+        (-1, 0),  # left
+        (-1, -1), # up-left
     ]
-    
+
     target = ['X', 'M', 'A', 'S']
     
     xmas = []
@@ -98,7 +98,5 @@ def part_02():
                 xmas += 1
     print(f"Day 04, part 2: {xmas}")
 
-if __name__ == '__main__':
-    part_01()
-    part_02()
-
+part_01()
+part_02()
