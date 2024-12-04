@@ -33,12 +33,10 @@ def part_01():
     def find_xmas(start_x, start_y, dx, dy):
         x, y = start_x, start_y
         chars = []
-        coords = []
         while True:
             if y < 0 or x < 0 or y >= len(grid) or x >= len(grid[y]):
                 break
             chars.append(grid[y][x])
-            coords.append((y, x))
             if len(chars) == 4:
                 break
             x += dx
@@ -59,9 +57,46 @@ def part_01():
     print(f"Day 04, part 1: {len(xmas)}")
 
 def part_02():
-    pass
-    xmas = []
-    print(f"Day 04, part 2: {len(xmas)}")
+    grid = get_input()
+    right_up = (1, -1)
+    right_down = (1, 1)
+    
+    target_mas = ['M', 'A', 'S']
+    target_sam = ['S', 'A', 'M']
+    
+    xmas = 0
+    
+    def find_xmas(start_x, start_y, dx, dy):
+        x, y = start_x, start_y
+        chars = []
+        while True:
+            if y < 0 or x < 0 or y >= len(grid) or x >= len(grid[y]):
+                break
+            chars.append(grid[y][x])
+            if len(chars) == 3:
+                break
+            x += dx
+            y += dy
+        matches_mas = chars == target_mas
+        matches_sam = chars == target_sam
+        return matches_mas or matches_sam
+    
+    
+    for y, row in enumerate(grid):
+        for x, c in enumerate(row):
+            if (
+                y + 1 >= len(grid)
+                or x + 1 >= len(grid[y])
+                or grid[y + 1][x + 1] != 'A'
+            ):
+                continue
+            if (
+                
+                find_xmas(x, y, *right_down)
+                and find_xmas(x, y + 2, *right_up)
+            ):
+                xmas += 1
+    print(f"Day 04, part 2: {xmas}")
 
 if __name__ == '__main__':
     part_01()
