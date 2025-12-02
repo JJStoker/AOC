@@ -19,11 +19,8 @@ def part_01():
     pos = 50
     times = 0
     for dir, clicks in rows:
-        if dir == 'R':
-            pos = (pos + clicks) % 100
-        else:
-            pos = (pos - clicks) % 100
-
+        new_pos = pos + (clicks * (1 if dir == 'R' else -1))
+        pos = new_pos % 100
         if pos == 0:
             times += 1
         
@@ -31,7 +28,17 @@ def part_01():
 
 def part_02():
     rows = get_input()
+    pos = 50
     times = 0
+    for dir, clicks in rows:
+        new_pos = pos + (clicks * (1 if dir == 'R' else -1))
+        if dir == 'R':
+            rotations = new_pos // 100
+        else:
+            rotations = (pos - 1) // 100 - (new_pos - 1) // 100
+        pos = new_pos % 100
+        times += rotations
+
     print(f"Day 01, part 2: {times}")   
 
 part_01()
