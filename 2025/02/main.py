@@ -30,8 +30,30 @@ def part_01():
 
 def part_02():
     rows = get_input()
-    times = 0
-    print(f"Day 02, part 2: {times}")   
+    r = []
+
+    for id1, id2 in [
+        map(int, ids.split('-'))
+        for ids in rows
+    ]:
+        for n in range(id1, id2 + 1):
+            sn = str(n)
+            length = len(sn)
+
+            for pow in range(2, length + 1):
+                if length % pow != 0:
+                    continue
+
+                part_len = length // pow
+                parts = [
+                    sn[i * part_len : (i + 1) * part_len]
+                    for i in range(pow)
+                ]
+                if all(p == parts[0] for p in parts):
+                    r.append(n)
+                    break
+
+    print(f"Day 02, part 2: {sum(r)}")   
 
 part_01()
 part_02()
